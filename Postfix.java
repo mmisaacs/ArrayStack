@@ -22,17 +22,17 @@ public class Postfix {
             char nextCharacter = infix.charAt(i);
 
             switch (nextCharacter){
-                case ' ':
+                case ' ': //ignore white spaces
                     break;
-                case '^' :
+                case '^' : //add ^ to stack
                     operatorStack.push(nextCharacter);
                     break;
 
-                case '+':
+                case '+': //add to stack if there isn't already an operator in stack
                 case '-':
                 case '*':
                 case '/':
-                    while(!operatorStack.isEmpty() &&
+                    while(!operatorStack.isEmpty() && //checks for a higher priority operator
                             (precedence(nextCharacter) <= precedence(operatorStack.peek()))){
                         postfix.append(operatorStack.pop());
                     }
@@ -64,8 +64,54 @@ public class Postfix {
         return postfix.toString();
     }
 
-    public static String evaluatePostfix(String postfix){
-        //FINISH
-        return "";
+    public static Integer evaluatePostfix(String postfix){
+        StackInterface<Integer> valueStack = new LinkedStack<>();
+        int i = 0;
+
+        while(i < postfix.length()){
+            char nextCharacter = postfix.charAt(i);
+            int operandTwo;
+            int operandOne;
+            int result = 0;
+
+            switch(nextCharacter){
+
+                case ' ':
+                    break;
+                case '+':
+                    operandTwo = valueStack.pop();
+                    operandOne = valueStack.pop();
+                    result = operandOne + operandTwo;
+                    valueStack.push(result);
+                    break;
+                case '-':
+                    operandTwo = valueStack.pop();
+                    operandOne = valueStack.pop();
+                    result = operandOne - operandTwo;
+                    valueStack.push(result);
+                    break;
+                case '*':
+                    operandTwo = valueStack.pop();
+                    operandOne = valueStack.pop();
+                    result = operandOne * operandTwo;
+                    valueStack.push(result);
+                    break;
+                case '/':
+                    operandTwo = valueStack.pop();
+                    operandOne = valueStack.pop();
+                    result = operandOne / operandTwo;
+                    valueStack.push(result);
+                    break;
+                case '^':
+                    operandTwo = valueStack.pop();
+                    operandOne = valueStack.pop();
+                    valueStack.push((int) Math.pow(operandOne, operandTwo));
+                    break;
+                default:
+                    valueStack.push((int) nextCharacter);
+            }
+            i++;
+        }
+        return valueStack.peek();
     }
 }
