@@ -1,5 +1,3 @@
-import java.nio.charset.CharacterCodingException;
-
 public class Postfix {
     static int precedence(char c){
         switch (c){
@@ -15,20 +13,25 @@ public class Postfix {
         return -1;
     }
     public static String convertToPostfix(String infix){
-        StackInterface<Character> operatorStack = new ResizeableArrayStack<>();
+        StackInterface<Character> operatorStack = new ResizeableArrayStack<Character>(infix.length());
         int i = 0;
         StringBuilder postfix = new StringBuilder();
 
         while (i < infix.length()) {
-            char c = infix.charAt(i);
-            char nextCharacter = infix.charAt(i + 1);
+            //char c = infix.charAt(i);
+            char nextCharacter = infix.charAt(i);
 
-            switch (c){
+            switch (nextCharacter){
+                case ' ':
+                    break;
                 case '^' :
                     operatorStack.push(nextCharacter);
                     break;
 
-                case '+', '-', '*', '/':
+                case '+':
+                case '-':
+                case '*':
+                case '/':
                     while(!operatorStack.isEmpty() &&
                             (precedence(nextCharacter) <= precedence(operatorStack.peek()))){
                         postfix.append(operatorStack.pop());
@@ -59,5 +62,10 @@ public class Postfix {
             postfix.append(topOperator);
         }
         return postfix.toString();
+    }
+
+    public static String evaluatePostfix(String postfix){
+        //FINISH
+        return "";
     }
 }
