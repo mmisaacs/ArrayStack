@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public class Postfix {
     static int precedence(char c){
         switch (c){
@@ -15,11 +17,15 @@ public class Postfix {
     public static String convertToPostfix(String infix){
         StackInterface<Character> operatorStack = new ResizeableArrayStack<Character>(infix.length());
         int i = 0;
-        StringBuilder postfix = new StringBuilder();
+        String postfix = "";
 
         while (i < infix.length()) {
-            //char c = infix.charAt(i);
             char nextCharacter = infix.charAt(i);
+            if (Character.isLetterOrDigit(nextCharacter)){
+                postfix += nextCharacter;
+                i++;
+                continue;
+            }
 
             switch (nextCharacter){
                 case ' ': //ignore white spaces
@@ -34,7 +40,7 @@ public class Postfix {
                 case '/':
                     while(!operatorStack.isEmpty() && //checks for a higher priority operator
                             (precedence(nextCharacter) <= precedence(operatorStack.peek()))){
-                        postfix.append(operatorStack.pop());
+                        postfix += operatorStack.pop();
                     }
                     operatorStack.push(nextCharacter);
                     break;
@@ -46,27 +52,39 @@ public class Postfix {
                 case ')':
                     Character topOperator = operatorStack.pop();
                     while(topOperator != '('){
-                        postfix.append(topOperator);
+                        postfix += topOperator;
                         topOperator = operatorStack.pop();
                     }
                     break;
 
                 default:
-                    postfix.append(nextCharacter);
+                    //postfix.append(nextCharacter);
                     break;
             }
             i++;
         }
         while (!operatorStack.isEmpty()){
             Character topOperator = operatorStack.pop();
-            postfix.append(topOperator);
+            postfix += topOperator;
         }
-        return postfix.toString();
+        return postfix;
     }
 
     public static Integer evaluatePostfix(String postfix){
         StackInterface<Integer> valueStack = new LinkedStack<>();
+
+        //
+        HashMap<Character, Integer> values = new HashMap<Character, Integer>();
+        values.put('a', 2);
+        values.put('b', 3);
+        values.put('c', 4);
+        values.put('d', 5);
+        values.put('e', 6);
+        values.put('f', 7);
+        values.put('g', 1);
+        values.put('h', 72);
         int i = 0;
+
 
         while(i < postfix.length()){
             char nextCharacter = postfix.charAt(i);
@@ -74,8 +92,12 @@ public class Postfix {
             int operandOne;
             int result = 0;
 
+            if(Character.isLetter(nextCharacter) && values.containsKey(nextCharacter)){
+                valueStack.push(values.get(nextCharacter));
+                i++;
+                continue;
+            }
             switch(nextCharacter){
-
                 case ' ':
                     break;
                 case '+':
@@ -108,7 +130,7 @@ public class Postfix {
                     valueStack.push((int) Math.pow(operandOne, operandTwo));
                     break;
                 default:
-                    valueStack.push((int) nextCharacter);
+                        break;
             }
             i++;
         }

@@ -8,12 +8,14 @@ public class LinkedStack<T> implements StackInterface<T>{
     public LinkedStack(){
         topNode = null;
     }
+
+    //add new node to linked stack
     public void push(T newEntry) {
         Node newNode = new Node(newEntry, topNode);
         topNode = newNode;
     }
 
-    @Override
+    //remove top node from linked stack
     public T pop() {
         T top = peek();
         topNode = topNode.getNextNode();
@@ -21,7 +23,7 @@ public class LinkedStack<T> implements StackInterface<T>{
         return top;
     }
 
-    @Override
+    //retrieve newest node
     public T peek() {
         if(isEmpty())
             throw new EmptyStackException();
@@ -29,12 +31,12 @@ public class LinkedStack<T> implements StackInterface<T>{
             return topNode.getData();
     }
 
-    @Override
+    //check if it is empty
     public boolean isEmpty() {
         return topNode == null;
     }
 
-    @Override
+    //remove all entries from stack
     public void clear() {
         topNode = null;
     }
