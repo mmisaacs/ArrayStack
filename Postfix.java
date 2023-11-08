@@ -2,6 +2,7 @@ import java.util.HashMap;
 
 public class Postfix {
     static int precedence(char c){
+        //checks if there is a higher priority operator in stack
         switch (c){
             case '+':
             case '-':
@@ -83,46 +84,45 @@ public class Postfix {
         values.put('f', 7);
         values.put('g', 1);
         values.put('h', 72);
+
         int i = 0;
+        int operandTwo;
+        int operandOne;
+        int result = 0;
 
 
         while(i < postfix.length()){
+            //gets the next character
             char nextCharacter = postfix.charAt(i);
-            int operandTwo;
-            int operandOne;
-            int result = 0;
 
+            //checks if next character is a letter, if so, exchanges it for value in hashmap
             if(Character.isLetter(nextCharacter) && values.containsKey(nextCharacter)){
                 valueStack.push(values.get(nextCharacter));
                 i++;
                 continue;
             }
             switch(nextCharacter){
-                case ' ':
+                case ' ': //moves on if it is a space
                     break;
                 case '+':
                     operandTwo = valueStack.pop();
                     operandOne = valueStack.pop();
-                    result = operandOne + operandTwo;
-                    valueStack.push(result);
+                    valueStack.push(operandOne + operandTwo);
                     break;
                 case '-':
                     operandTwo = valueStack.pop();
                     operandOne = valueStack.pop();
-                    result = operandOne - operandTwo;
-                    valueStack.push(result);
+                    valueStack.push(operandOne - operandTwo);
                     break;
                 case '*':
                     operandTwo = valueStack.pop();
                     operandOne = valueStack.pop();
-                    result = operandOne * operandTwo;
-                    valueStack.push(result);
+                    valueStack.push(operandOne * operandTwo);
                     break;
                 case '/':
                     operandTwo = valueStack.pop();
                     operandOne = valueStack.pop();
-                    result = operandOne / operandTwo;
-                    valueStack.push(result);
+                    valueStack.push(operandOne / operandTwo);
                     break;
                 case '^':
                     operandTwo = valueStack.pop();
@@ -134,6 +134,7 @@ public class Postfix {
             }
             i++;
         }
+        //returns the total (only number in valueStack)
         return valueStack.peek();
     }
 }
